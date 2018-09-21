@@ -11,6 +11,9 @@ import wave
 import pyaudio
 import time
 import pylab
+import numpy as npy
+from scipy.fftpack import fft
+
 
 
 class SadSongMusicTransform:
@@ -44,11 +47,36 @@ class SadSongMusicTransform:
         if not is_legal_file(file_name):
             print 'File name is illegal:', file_name
             return 0
-        wf = wave.open(file_name, "rb")
+        wf = wave.open(file_name, 'rb')
+        params = wf.getparams()
+        n_channels, sample_width, frame_rate, n_frames = params[:4]
+        str_data = wf.readframes(n_frames)
+        wave_data = npy.fromstring(str_data, dtype=npy.short)
+        if wf.getnchannels() == 2: # for music with two channels, 'LRLRLRLR'
+            wave_data.shape = -1, 2
+        wave_data = wave_data.T
+        time_list = npy.arange(0, n_frames) * (1.0 / frame_rate)
+        return [time_list, wave_data]
+
+    def plot_wave_data(self, file_name):
+        time_list, wave_data = self.wav_to_digital(file_name)
+        pylab.subplot(211)
+        pylab.plot(time, wave_data[0])
+        pylab.subplot(212)
+        pylab.plot(time, wave_data[1], c="g")
+        pylab.xlabel("time (seconds)")
+        pylab.show()
+
+    def time_to_frequency(self, file_name):
+        time_list, wave_data = self.wav_to_digital(file_name)
+        for wave_line in wave_data:
+            pass
+
 
     def test_execute(self):
-        test_file = 'C:/Users/7q/PycharmProjects/SadSong/sample_data/test01.wav'
-        self.play_single_song(test_file)
+        file_name = 'C:/Users/7q/PycharmProjects/SadSong/sample_data/test01.wav'
+        self.play_single_song(file_name)
+
 
 
 # test
