@@ -72,7 +72,6 @@ class SadSongMusicTransform:
         for wave_line in wave_data:
             pass
 
-
     def test_execute(self):
         file_name = 'C:/Users/7q/PycharmProjects/SadSong/sample_data/test01.wav'
         self.play_single_song(file_name)

@@ -51,8 +51,6 @@ def dump_object(obj, file_name):
     f.close()
 
 
-
-
 # test
 if __name__ == '__main__':
     path_test = 'C:/Users/7q/PycharmProjects/SadSong/sample_data/'
